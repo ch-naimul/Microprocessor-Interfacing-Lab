@@ -1,0 +1,24 @@
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    a dw 3
+    b dw 4
+    
+.CODE
+MAIN PROC
+    ; Initialize DS
+    MOV AX, @DATA
+    MOV DS, AX
+
+    ; Enter your code here
+    MOV AX, a
+    MOV BX, b
+    
+    ADD AX, BX; add ax with bx and store their sum in ax
+
+    ; Exit to DOS
+    MOV AX, 4C00H
+    INT 21H
+MAIN ENDP
+END MAIN
