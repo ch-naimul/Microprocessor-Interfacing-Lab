@@ -1,0 +1,32 @@
+
+.model small
+.stack 100h
+
+.data
+    ; No data section needed for this task
+
+.code
+main proc
+    mov ax, 5      ; Initialize AX with a value (e.g., 5)
+    mov bx, 10     ; Initialize BX with another value (e.g., 10)
+
+    mul bx         ; Multiply AX by BX (result in AX)
+
+    mov cx, ax     ; Move the result from AX to CX
+
+    ; Display the result (optional)
+    mov dl, '0'    ; Convert the result to ASCII
+    add dl, cl
+    mov ah, 02h
+    int 21h
+
+    ; Exit
+    mov ah, 4Ch
+    int 21h
+
+main endp
+end main
+
+
+
+
