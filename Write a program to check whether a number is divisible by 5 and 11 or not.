@@ -1,0 +1,44 @@
+.model small
+.stack 100h
+
+.data
+    prompt db "Enter any number: $"
+    divisible_msg db " Number is divisible by 5 and 11.$"
+    not_divisible_msg db " Number is not divisible by 5 and 11.$"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    ; Display prompt
+    lea dx, prompt
+    mov ah, 9
+    int 21h
+
+    ; Read an integer from the user
+    mov ah, 1
+    int 21h
+    sub al, '0' ; Convert ASCII digit to actual value
+
+    ; Check if it's divisible by both 5 and 11
+    cmp al, 0
+    je display_divisible ; Zero is divisible by any number
+    cmp al, 55 ; 55 is the product of 5 and 11
+    je display_divisible
+
+    ; Not divisible by both 5 and 11
+    lea dx, not_divisible_msg
+    jmp display_result
+
+display_divisible:
+    ; Divisible by both 5 and 11
+    lea dx, divisible_msg
+
+display_result:
+    mov ah, 9
+    int 21h
+
+    mov ah, 4Ch ; Exit program
+    int 21h
+end main
