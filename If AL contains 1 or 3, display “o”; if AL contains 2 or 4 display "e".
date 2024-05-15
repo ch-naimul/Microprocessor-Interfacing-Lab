@@ -1,1 +1,55 @@
+.model small
+.stack 100h
+
+.data
+    msg db 10, 13, "Enter a number (1-4): $"
+    msg1 db 'The result is: o', 13, 10, '$' ; Message for "o"
+    msg2 db 'The result is: e', 13, 10, '$' ; Message for "e"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    ; Display prompt
+    lea dx, msg
+    mov ah, 9
+    int 21h
+
+    ; Read a single character from the user
+    mov ah, 1
+    int 21h
+    mov bl, al ; Save the input in BL
+
+    ; Check the input value
+    cmp bl, '1'
+    je display_o
+    cmp bl, '2'
+    je display_e
+    cmp bl, '3'
+    je display_o
+    cmp bl, '4'
+    je display_e
+
+    jmp exit
+
+display_o:
+    mov ah, 9
+    lea dx, msg1
+    int 21h
+    jmp exit
+
+display_e:
+    mov ah, 9
+    lea dx, msg2
+    int 21h
+
+exit:
+    mov ah, 4Ch ; Exit program
+    int 21h
+end main
+
+
+
+
 
