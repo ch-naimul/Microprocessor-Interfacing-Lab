@@ -1,0 +1,48 @@
+.model small
+.stack 100h
+
+.data
+    prompt db "Enter a number: $"
+    even_msg db " The number is even.$"
+    odd_msg db " The number is odd.$"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    ; Display prompt
+    lea dx, prompt
+    mov ah, 9
+    int 21h
+
+    ; Read an integer from the user
+    mov ah, 1
+    int 21h
+    sub al, '0' ; Convert ASCII digit to actual value
+
+    ; Check if the number is even or odd
+    test al, 1
+    jz display_even
+    jmp display_odd
+
+display_even:
+    ; Display "even" message
+    lea dx, even_msg
+    mov ah, 9
+    int 21h
+    jmp exit
+
+display_odd:
+    ; Display "odd" message
+    lea dx, odd_msg
+    mov ah, 9
+    int 21h
+
+exit:
+    mov ah, 4Ch ; Exit program
+    int 21h
+end main
+
+
+
