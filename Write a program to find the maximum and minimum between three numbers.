@@ -1,0 +1,68 @@
+.model small
+.stack 100h
+
+.data
+    prompt db "Enter three numbers (separated by spaces): $"
+    max_msg db "Maximum number is: $"
+    min_msg db "Minimum number is: $"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    ; Display prompt
+    lea dx, prompt
+    mov ah, 9
+    int 21h
+
+    ; Read three integers from the user
+    mov ah, 1
+    int 21h
+    sub al, '0' ; Convert ASCII digit to actual value
+    mov bl, al
+
+    mov ah, 1
+    int 21h
+    sub al, '0'
+    cmp al, bl
+    jg swap
+    mov bh, al
+
+    mov ah, 1
+    int 21h
+    sub al, '0'
+    cmp al, bh
+    jg swap
+    mov bh, al
+
+    ; Display maximum and minimum
+    lea dx, max_msg
+    mov ah, 9
+    int 21h
+    mov dl, bl
+    add dl, '0'
+    mov ah, 2
+    int 21h
+
+    lea dx, min_msg
+    mov ah, 9
+    int 21h
+    mov dl, bh
+    add dl, '0'
+    mov ah, 2
+    int 21h
+
+    jmp exit
+
+swap:
+    xchg al, bl
+    jmp swap_done
+
+swap_done:
+    xchg al, bh
+
+exit:
+    mov ah, 4Ch ; Exit program
+    int 21h
+end main
