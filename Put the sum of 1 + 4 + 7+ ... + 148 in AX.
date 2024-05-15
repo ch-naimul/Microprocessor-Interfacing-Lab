@@ -1,0 +1,32 @@
+.model small
+.stack 100h
+
+.data
+    sum db 0
+
+.code
+    mov ax, @data
+    mov ds, ax
+
+    mov cx, 50   ; Number of terms (148 / 3)
+    mov al, 1    ; Initial value (1)
+
+sum_loop:
+    add [sum], al  ; Add the current value to the sum
+    add al, 3      ; Increment by 3 (1, 4, 7, ...)
+    loop sum_loop
+
+    ; Display the result (optional)
+    mov dl, [sum]
+    mov ah, 02h
+    int 21h
+
+    ; Exit
+    mov ah, 4Ch
+    int 21h 
+    
+
+
+
+
+
