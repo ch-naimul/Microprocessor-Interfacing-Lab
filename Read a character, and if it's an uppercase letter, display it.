@@ -1,0 +1,53 @@
+.model small
+.stack 100h
+
+.data
+    msg db "Enter a character: $"
+    uppercase_msg db " The uppercase letter is: $"
+    not_uppercase_msg db " Not an uppercase letter.$"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    ; Display prompt
+    lea dx, msg
+    mov ah, 9
+    int 21h
+
+    ; Read a single character from the user
+    mov ah, 1
+    int 21h
+    mov bl, al ; Save the input in BL
+
+    ; Check if it's an uppercase letter
+    cmp bl, 'A'
+    jb not_uppercase
+    cmp bl, 'Z'
+    ja not_uppercase
+
+    ; Display the uppercase letter
+    lea dx, uppercase_msg
+    mov ah, 9
+    int 21h
+    mov dl, bl
+    mov ah, 2
+    int 21h
+
+    jmp exit
+
+not_uppercase:
+    ; Display "Not an uppercase letter"
+    lea dx, not_uppercase_msg
+    mov ah, 9
+    int 21h
+
+exit:
+    mov ah, 4Ch ; Exit program
+    int 21h
+end main
+
+
+
+
