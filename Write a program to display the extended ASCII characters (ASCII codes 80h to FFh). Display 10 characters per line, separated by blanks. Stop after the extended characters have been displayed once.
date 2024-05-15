@@ -1,0 +1,56 @@
+.model small
+.stack 100h
+
+.data
+    char db 80h   ; Start with ASCII code 80h (extended characters)
+    count db 0    ; Counter for characters displayed per line
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+display_loop:
+    ; Display the current character
+    mov dl, char
+    mov ah, 02h
+    int 21h
+
+    ; Display a blank space
+    mov dl, ' '
+    int 21h
+
+    ; Increment the counter
+    inc count
+
+    ; Check if 10 characters have been displayed
+    cmp count, 10
+    jz newline
+
+    ; Increment to the next character
+    inc char
+    jmp display_loop
+
+newline:
+    ; Display a newline
+    mov dl, 10
+    int 21h
+
+    ; Check if all extended characters have been displayed
+    cmp char, 0FFh
+    jz exit_program
+
+    ; Reset the counter
+    mov count, 0
+
+    ; Increment to the next character
+    inc char
+    jmp display_loop
+
+exit_program:
+    ; Exit
+    mov ah, 4Ch
+    int 21h
+
+main endp
+end main
