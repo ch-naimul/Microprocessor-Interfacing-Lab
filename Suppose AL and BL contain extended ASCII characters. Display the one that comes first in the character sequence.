@@ -1,0 +1,40 @@
+.model small
+.stack 100h
+
+.data
+    char1 db 'C' ; Example: Initialize char1 with an extended ASCII character
+    char2 db 'H' ; Example: Initialize char2 with another extended ASCII character
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    ; Compare char1 and char2
+    mov al, char1
+    mov bl, char2
+    cmp al, bl
+    jae display_char2 ; Jump if char2 comes first or they are equal
+
+    ; Display char1
+    mov dl, al
+    mov ah, 2 ; DOS function to display character
+    int 21h
+
+    jmp exit
+
+display_char2:
+    ; Display char2
+    mov dl, bl
+    mov ah, 2 ; DOS function to display character
+    int 21h
+
+exit:
+    mov ah, 4Ch ; Exit program
+    int 21h
+end main
+
+
+
+
+
