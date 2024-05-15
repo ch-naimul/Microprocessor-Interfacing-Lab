@@ -1,0 +1,85 @@
+.model small
+.stack 100h
+
+.data
+    prompt db 10, 13, "ENTER A HEX DIGIT: $"
+    illegal db 10, 13, "ILLEGAL CHARACTER - ENTER 0...9 OR A...F: $"
+    decimal db 10, 13, "IN DECIMAL IT IS ", 0, "$"
+    repeat_prompt db 10, 13, "DO YOU WANT TO DO IT AGAIN? $"
+    hex_digit db ?
+    repeat_choice db ?
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+repeat:
+    ; Display prompt for hex digit
+    mov dx, offset prompt
+    mov ah, 09h
+    int 21h
+
+    ; Read a single character from the user
+    mov ah, 01h
+    int 21h
+    mov bl, al
+
+    ; Check if the character is a valid hex digit
+    cmp bl, '0'
+    jl illegal_char
+    cmp bl, '9'
+    jle valid_digit
+    cmp bl, 'A'
+    jl illegal_char
+    cmp bl, 'F'
+    jg illegal_char
+
+valid_digit:
+    ; Convert hex digit to decimal
+    sub bl, '0'
+    cmp bl, 9
+    jbe decimal_digit
+    sub bl, 7  ; Adjust for 'A' to 'F'
+
+decimal_digit:
+    ; Display decimal value
+    add bl, '0'
+    mov dl, bl
+    mov ah, 02h
+    int 21h
+
+    ; Display newline
+    mov dl, 10
+    int 21h
+
+    ; Prompt for repeat
+    mov dx, offset repeat_prompt
+    mov ah, 09h
+    int 21h
+
+    ; Read a single character for repeat choice
+    mov ah, 01h
+    int 21h
+    mov repeat_choice, al
+
+    ; Check if repeat choice is 'y' or 'Y'
+    cmp repeat_choice, 'y'
+    je repeat
+    cmp repeat_choice, 'Y'
+    je repeat
+
+exit_program:
+    ; Exit
+    mov ah, 4Ch
+    int 21h
+
+illegal_char:
+    ; Display illegal character message
+    mov dx, offset illegal
+    mov ah, 09h
+    int 21h
+    jmp repeat
+
+main endp
+end main
