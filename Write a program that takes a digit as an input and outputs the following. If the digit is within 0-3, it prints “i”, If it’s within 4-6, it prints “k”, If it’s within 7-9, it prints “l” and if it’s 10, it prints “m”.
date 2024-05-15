@@ -1,0 +1,78 @@
+.model small
+.stack 100h
+
+.data
+    msg db "Enter a digit (0-9): $"
+    result_msg1 db " Result: i$"
+    result_msg2 db " Result: k$"
+    result_msg3 db " Result: l$"
+    result_msg4 db " Result: m$"
+    result_msg_invalid db " Result: ?$"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    lea dx, msg
+    mov ah, 9
+    int 21h
+
+    mov ah, 1
+    int 21h
+    sub al, '0' 
+
+    cmp al, 0
+    jle print_result_msg1
+    cmp al, 1
+    jle print_result_msg1
+    cmp al, 2
+    jle print_result_msg1
+    cmp al, 3
+    jle print_result_msg1
+    
+    cmp al, 4
+    jle print_result_msg2
+    cmp al, 5
+    jle print_result_msg2
+    cmp al, 6
+    jle print_result_msg2
+    
+    cmp al,7 
+    jle print_result_msg3
+    cmp al, 8
+    jle print_result_msg3
+    cmp al, 9
+    jle print_result_msg3
+    
+    cmp al, 10
+    je print_result_msg4
+    jmp invalid_digit
+
+print_result_msg1:
+    lea dx, result_msg1
+    jmp display_result
+
+print_result_msg2:
+    lea dx, result_msg2
+    jmp display_result
+
+print_result_msg3:
+    lea dx, result_msg3
+    jmp display_result
+
+print_result_msg4:
+    lea dx, result_msg4
+    jmp display_result
+
+invalid_digit:
+    lea dx, result_msg_invalid
+
+display_result:
+    mov ah, 9
+    int 21h
+
+    mov ah, 4Ch 
+    int 21h
+
+end main
