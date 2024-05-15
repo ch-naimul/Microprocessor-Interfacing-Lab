@@ -1,0 +1,81 @@
+.model small
+.stack 100h
+
+.data
+    weekday_msg  db "Please Enter the Day Number 0 to 6 (0= Saturday, 6=Friday): $"
+    monday_msg      db " Monday$"
+    tuesday_msg     db " Tuesday$"
+    wednesday_msg   db " Wednesday$"
+    thursday_msg    db " Thursday$"
+    friday_msg      db " Friday$"
+    saturday_msg    db " Saturday$"
+    sunday_msg      db " Sunday$"
+    invalid_msg     db "Please enter a valid number between 0 and 6$"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    lea dx, weekday_msg
+    mov ah, 9
+    int 21h
+
+    mov ah, 1
+    int 21h
+    sub al, '0'  
+
+    cmp al, 0
+    je print_saturday
+    cmp al, 1
+    je print_sunday
+    cmp al, 2
+    je print_monday
+    cmp al, 3
+    je print_tuesday
+    cmp al, 4
+    je print_wednesday
+    cmp al, 5
+    je print_thursday
+    cmp al, 6
+    je print_friday
+
+    lea dx, invalid_msg
+    jmp display_message
+
+print_monday:
+    lea dx, monday_msg
+    jmp display_message
+
+print_tuesday:
+    lea dx, tuesday_msg
+    jmp display_message
+
+print_wednesday:
+    lea dx, wednesday_msg
+    jmp display_message
+
+print_thursday:
+    lea dx, thursday_msg
+    jmp display_message
+
+print_friday:
+    lea dx, friday_msg
+    jmp display_message
+
+print_saturday:
+    lea dx, saturday_msg
+    jmp display_message
+
+print_sunday:
+    lea dx, sunday_msg
+
+display_message:
+    mov ah, 9
+    int 21h
+
+exit_program:
+    mov ah, 4Ch
+    int 21h
+
+end main
