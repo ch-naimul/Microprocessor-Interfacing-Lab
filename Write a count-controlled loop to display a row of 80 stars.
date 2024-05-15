@@ -1,0 +1,22 @@
+.model small
+.stack 100h
+
+.data
+    count dw 80
+    star db '*'
+
+.code
+    mov ax, @data
+    mov ds, ax
+
+    mov cx, count
+    mov dl, star
+    mov ah, 02h
+loop_start:
+    
+    int 21h
+    loop loop_start
+
+    mov ah, 4Ch
+    int 21h
+end
