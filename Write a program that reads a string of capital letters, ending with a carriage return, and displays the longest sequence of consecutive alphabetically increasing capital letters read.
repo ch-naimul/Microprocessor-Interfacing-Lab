@@ -1,0 +1,88 @@
+.model small
+.stack 100h
+
+.data
+    input_buffer db 100  
+    longest_sequence db 100  
+    prompt db 10, 13, "ENTER A STRING OF CAPITAL LETTERS: $"
+    result_prompt db 10, 13, "THE LONGEST CONSECUTIVELY INCREASING STRING IS: $"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    mov dx, offset prompt
+    mov ah, 09h
+    int 21h
+
+    mov ah, 0Ah
+    mov dx, offset input_buffer
+    int 21h
+
+    mov si, offset input_buffer
+    mov di, offset longest_sequence
+    mov cx, 1 
+    mov bx, 1 
+
+find_sequence:
+    mov al, [si] 
+    cmp al, 13   
+    je end_of_input
+
+    cmp al, 'A'
+    jl not_uppercase
+    cmp al, 'Z'
+    jg not_uppercase
+
+    mov dl, [si + 1]
+    cmp dl, 13
+    je end_of_input
+
+    mov ah, al
+    inc ah   
+    cmp dl, ah
+    jne end_sequence
+    
+    inc cx
+    jmp next_char
+
+end_sequence:
+    cmp cx, bx
+    jle not_longest
+    mov bx, cx
+    mov cx, 1  
+    mov di, offset longest_sequence
+    mov al, [si - bx + 1] 
+    mov [di], al
+    mov al, [si]  
+    mov [di + bx - 1], al
+    inc di
+    jmp next_char
+
+not_longest:
+    mov cx, 1 
+
+next_char:
+    inc si
+    jmp find_sequence
+
+end_of_input:
+    mov dx, offset result_prompt
+    mov ah, 09h
+    int 21h
+
+    mov dx, offset longest_sequence
+    mov ah, 09h
+    int 21h
+
+    ; Exit
+    mov ah, 4Ch
+    int 21h
+
+not_uppercase:
+    inc si
+    jmp find_sequence
+
+main endp
+end main
